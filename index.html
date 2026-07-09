@@ -102,6 +102,86 @@ const IMPORTANCE = [
   [3, 2, 3, 2, 1],
 ];
 
+/* ===================== 证据出处库（供评分卡溯源，基于公开发表资料/说明书） ===================== */
+const REFS = {
+  // —— 指南 / 共识 ——
+  guide2023: { type: "指南", title: "《中国血脂管理指南（2023 年）》", source: "中华心血管病杂志 2023, 51(3)", url: "https://csc.cma.org.cn/attach/0/96b4e603cee74b7fb208b278aa92bd8b.pdf", finding: "中等强度他汀起始治疗(I,A)；他汀不达标者联合胆固醇吸收抑制剂(I,A)。CAI 含依折麦布与海博麦布；海博麦布 10mg 单用 LDL-C 较安慰剂降约 15%，20mg 联合他汀较单用他汀额外降约 16%；他汀+CAI 可使 LDL-C 降 50%~60%。海博麦布为国产1类首入指南。" },
+  guideBase2024: { type: "指南", title: "《中国血脂管理指南（基层版 2024 年）》", source: "临床心血管病杂志 2024, 40(4): 249-256", url: "https://lcxxg.whuhzzs.com/data/article/lcxxg/preview/pdf/lcxxgbzz-40-4-249.pdf", finding: "基层场景延续他汀+CAI 联合达标策略，胆固醇吸收抑制剂为他汀不达标后首选联合药物。" },
+  guideUpdate: { type: "解读", title: "《中国血脂管理指南(2023)》药物更新透视", source: "医药导报 2023, 42(8): 1093", url: "https://www.yydbzz.com/article/2023/1004-0781/1004-0781-42-8-1093.shtml", finding: "指南药物部分更新解读：海博麦布作为国产 1 类 CAI 进入指南，依折麦布不再是唯一推荐的胆固醇吸收抑制剂。" },
+
+  // —— RCT / III期 / II期（正式发表） ——
+  sms3_01: { type: "III期", title: "海博麦布单药 III 期（HS-25-III-01，CTR20150787）", source: "陈纪言等，中国循环杂志 2022, 37(7): 708-714", url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9443664/", finding: "373 例原发性高胆固醇血症，海博麦布 20mg/d vs 安慰剂 12 周：LDL-C 较安慰剂降约 14.6%(FAS)/16.0%(PPS)，non-HDL-C、TC、ApoB 显著下降；12 周不良反应 4.55% vs 8.40%，长期(52周)持续有效、安全。" },
+  sms3_03: { type: "III期", title: "海博麦布单药或联合阿托伐他汀 III 期（41 中心）", source: "王建安团队，中华心血管病杂志 2023（PMID 36789598）", url: "https://pubmed.ncbi.nlm.nih.gov/36789598/", finding: "全国 41 中心 6 组随机对照；海博麦布 10 或 20mg 联合阿托伐他汀 10mg 使 LDL-C 自基线降约 39% 和 40%，长评期至 52 周。" },
+  sms3_02: { type: "III期", title: "海博麦布+阿托伐他汀加载 III 期（HS-25-III-02，NCT03433196）", source: "Qi L, Huo Y 等，Front Cardiovasc Med 2022; 9: 888604", url: "https://www.frontiersin.org/journals/cardiovascular-medicine/articles/10.3389/fcvm.2022.888604/full", finding: "255 例合并 ASCVD/等危症、他汀未达标者；阿托伐他汀 10mg 基础上加海博麦布，12 周 LDL-C 变化 -16.39% vs 他汀组 -6.75%(P<0.0001)，安全性无额外差异(AE 7.87% vs 13.60%)。" },
+  sms2: { type: "II期", title: "海博麦布 II 期剂量探索（含依折麦布阳性对照）", source: "Qi L, Zhao S, Ge J 等，Cardiology Plus 2022; 7(2): 77-84", url: "https://journals.lww.com/cardioplus/fulltext/2022/06000/efficacy_and_safety_of_hybutimibe_on_primary.4.aspx", finding: "244 例，8 周：依折麦布 -20.01%、海博麦布 5mg -10.84%、10mg -17.0%；各剂量耐受良好，疗效与依折麦布相当。" },
+
+  // —— 药代动力学 ——
+  pk1: { type: "PK", title: "口服 ¹⁴C 标记海博麦布药代动力学研究", source: "Liao J 等，Front Pharmacol 2021; 12: 665372", url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8194275/", finding: "主要血浆代谢物为葡萄糖醛酸结合物(占 97.2%)；尿排 16.39%、粪排 76.90%，存在明显肠肝循环。" },
+  pk2: { type: "PK", title: "健康中国受试者 PK/PD、安全性与耐受性", source: "Ruan Z 等，J Clin Pharmacol 2014; 54(10): 1144-1152", url: "https://pubmed.ncbi.nlm.nih.gov/24729143/", finding: "健康受试者药代/药效、安全耐受性研究，支撑每日一次给药方案。" },
+
+  // —— 真实世界（多为中文小样本/无稳定公开全文，纯文字） ——
+  rwe_elderly: { type: "真实世界", title: "海博麦布联合阿托伐他汀改善老年冠心病伴高脂血症患者血脂及颈动脉状态", source: "任军, 陈锦华. 中国老年学杂志 2025, 45(9): 2061-2064 · 全文见 CNKI/万方", finding: "老年冠心病伴高脂血症患者，联合方案有效调节血脂、改善颈动脉状态、保护心功能、抑制炎症（具体数值以全文为准）。" },
+  rwe_liu: { type: "真实世界", title: "海博麦布单用或联合他汀真实世界研究", source: "刘胜等. 实用药物与临床 2024, 27(6): 423-430 · 全文见 CNKI/万方", finding: "真实世界数据显示海博麦布单用或联合他汀显著降低 LDL-C、ApoB、TG，联合用药效果更佳。" },
+  rwe_plaque: { type: "真实世界", title: "海博麦布联合他汀缩小并稳定动脉粥样硬化斑块", source: "吴永红等. 今日药学 2025, 35(9): 696-699+705 · 全文见 CNKI/万方", finding: "联合他汀在缩小并稳定斑块方面显示优势（具体数值以全文为准）。" },
+
+  // —— 药物经济学 ——
+  cea: { type: "药物经济学", title: "海博麦布治疗 ASCVD 的成本-效果分析", source: "张小涵等. 中国药物应用与监测 2023, 20(4): 287-290", url: "https://www.sinomed.ac.cn/article.do?ui=2024234370", finding: "基于 III 期数据建 30 年 Markov 模型评价海博麦布+阿托伐他汀 vs 他汀单药的经济性（ICER 具体值以全文为准）。" },
+  select: { type: "药品评价", title: "依折麦布与海博麦布的评价与遴选", source: "中国医院用药评价与分析 2024, 24(1)", url: "http://yypf-china.com/Periodical/DownPdf?articleID=1112", finding: "10 维度量化：依折麦布 72.4 分、海博麦布 67.6 分；海博麦布在长期安全性与经济性略优，依折麦布因指南一级推荐与循证积累占优；两药均为医保乙类，海博麦布无支付条件限制(除适应症)。" },
+
+  // —— 说明书 / 适宜人群（无稳定公开链接，纯文字） ——
+  smsLabel: { type: "说明书", title: "海博麦布片（赛斯美）说明书", source: "NMPA 核准 2021-06-25，2025-11-24 修订 · 原件见内部/药监局查询", finding: "适应症为原发性(杂合子家族性或非家族性)高胆固醇血症，可单用或与他汀联用，降 TC/LDL-C/ApoB；规格 10mg/20mg 每日一次；老年及轻中度肝功能不全无需调整剂量；儿童及重度肝功能不全不推荐。" },
+  smsSafety: { type: "安全性", title: "海博麦布 52 周长期安全性数据", source: "海博麦布说明书（III 期长评期）· 见说明书原件", finding: "长期治疗阶段安全性良好，肝酶/肌酶相关不良反应发生率低且均衡，支撑“肝肾无忧”长期用药叙事。" },
+
+  // —— 医保 / 准入 / 上市（官方链接） ——
+  nmpa: { type: "批准", title: "NMPA 优先审评批准海博麦布上市（2021.6.25）", source: "国家药监局 · 2021 年度药品审评报告", url: "https://www.nmpa.gov.cn/directory/web/nmpa/zhuanti/cxylqx/cxypxx/20210628102727149.html", finding: "浙江海正药业 1 类创新药海博麦布片经优先审评批准上市；批准文号国药准字 H20210030/H20210031。" },
+  nrdl: { type: "医保", title: "国家医保药品目录（海博麦布，乙类）", source: "国家医保局 · 2021 谈判纳入，2023/2025 续约", url: "https://www.nhsa.gov.cn/attach/Ypsn2023/YPSN202300131/YPSN202300131-N1.pdf", finding: "2021.12 经国家医保谈判纳入目录乙类(医保发〔2021〕50号)；支付范围限原发性高胆固醇血症，2025 版仍为乙类。" },
+  nrdlCat: { type: "医保", title: "国家医保药品目录动态调整（政策入口）", source: "国家医疗保障局", url: "https://www.nhsa.gov.cn/col/col104/index.html", finding: "医保目录甲/乙类管理与动态调整入口，可查询海博麦布准入与支付状态。" },
+
+  // —— 竞品 / 类效应（依折麦布、PCSK9 硬终点） ——
+  improveIt: { type: "对照", title: "IMPROVE-IT（依折麦布心血管硬终点）", source: "Cannon CP 等，N Engl J Med 2015; 372: 2387-2397", url: "https://www.nejm.org/doi/full/10.1056/NEJMoa1410489", finding: "18144 例 ACS，辛伐他汀+依折麦布 vs 辛伐他汀，7 年主要终点 32.7% vs 34.7%(HR 0.936, P=0.016)；证明他汀基础上加非他汀降脂可进一步降事件。海博麦布本身尚无 MACE 研究，此为同类(依折麦布)类效应外推。" },
+  fourier: { type: "对照", title: "FOURIER（依洛尤单抗 PCSK9i 硬终点）", source: "Sabatine MS 等，N Engl J Med 2017; 376: 1713-1722", url: "https://www.nejm.org/doi/full/10.1056/NEJMoa1615664", finding: "加他汀 LDL-C 较安慰剂降 59%，主要复合终点风险降 15%(HR 0.85, P<0.001)；PCSK9i 为达标阶梯上一层强化选项。" },
+
+  /* ========== 多达一（氨氯地平阿托伐他汀钙片 / Caduet）专属证据 ========== */
+  // —— 单片复方核心 RCT / 达标研究 ——
+  gemini: { type: "III期", title: "GEMINI：氨氯地平/阿托伐他汀单片复方治疗高血压合并血脂异常", source: "Blank R, LaSalle J 等，J Clin Hypertens 2005; 7: 264-273（PMID 15886529）", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC8109673/", finding: "1220 例未控制高血压患者，14 周 8 个剂量档滴定：57.7% 同时达到血压与 LDL-C 双达标（基线双未控者 51.9%）；CV 风险 I 组达 77.2%、II 组 76.1%。" },
+  geminiAALA: { type: "国际研究", title: "GEMINI-AALA：多种族人群单片复方双达标研究", source: "Zamorano J 等，J Hum Hypertens 2009（27 国，含亚太）", url: "https://www.nature.com/articles/jhh2008114", finding: "覆盖亚太/中东/非洲/拉美 27 国的 14 周开放研究，证实单片复方在多种族人群中改善血压与血脂双重达标，安全性良好。" },
+  respond: { type: "RCT", title: "RESPOND：氨氯地平与阿托伐他汀合用的疗效、安全性与药效学交互", source: "Preston RA 等，J Clin Pharmacol（1660 例随机安慰剂对照）", url: "https://pubmed.ncbi.nlm.nih.gov/17389560/", finding: "1660 例高血压合并血脂异常患者随机对照，证实两药合用降压与降脂作用互不干扰，安全性良好。" },
+  jaha_fdc: { type: "临床获益", title: "氨氯地平+强效他汀固定复方在高血压合并高胆固醇血症的临床获益", source: "J Am Heart Assoc 2024; 13: e033780", url: "https://www.ahajournals.org/doi/10.1161/JAHA.123.033780", finding: "综述/研究支持固定剂量复方在同时控制血压与胆固醇、改善依从性方面的临床价值。" },
+  // —— 依从性 / 持续性（多达一最强差异化） ——
+  adhPatel: { type: "依从性", title: "单片氨氯地平/阿托伐他汀 vs 两片方案的依从性研究", source: "Patel BV 等，Vasc Health Risk Manag 2008; 4(3): 673-681", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2515427/", finding: "单片复方达到良好依从性的概率是两药分服的 1.95 倍(P<0.0001)；1 年随访时为 2.41~3.50 倍，持续性亦显著优于两片方案。" },
+  adhSimons: { type: "持续性", title: "单片 vs 两片氨氯地平与阿托伐他汀的长期持续性（澳大利亚 2006-2010）", source: "Simons LA 等，Med J Aust 2011; 195(3): 134-137", url: "https://pubmed.ncbi.nlm.nih.gov/21806531/", finding: "两片方案 6204 例中 23% 未续第一次处方、59% 12 个月内停药（中位持续 7 个月）；单片复方长期持续性显著优于两片方案。" },
+  adhMeta: { type: "Meta分析", title: "固定剂量复方 vs 自由联合的用药依从性：系统评价与 Meta 分析", source: "Front Pharmacol 2023; 14: 1156081", url: "https://www.frontiersin.org/journals/pharmacology/articles/10.3389/fphar.2023.1156081/full", finding: "系统评价证实固定剂量复方(FDC)较等效自由联合显著提升依从性，为单片复方核心循证支撑。" },
+  // —— 指南地位（SPC 推荐） ——
+  htnGuide2024: { type: "指南", title: "《中国高血压防治指南（2024 年修订版）》", source: "中华医学会等 · 2024", url: "https://m.cnma.org.cn/nd.jsp?mid=5&id=2561", finding: "单片复方制剂(SPC)与常用降压药均可作为初始和维持治疗；血压≥160/100mmHg 或高于目标 20/10mmHg 的高危患者推荐联合治疗/SPC，推荐级别由 I,C 升级为 I,A。" },
+  eshGuide2023: { type: "国际指南", title: "ESH 高血压管理指南（2023）", source: "European Society of Hypertension 2023", url: "https://www.nhsa.gov.cn/attach/Ypsn2024/YPSW202400331/YPSW202400331.pdf", finding: "建议大多数高血压患者以两药 SPC 起始治疗(I,A)，以提高降压达标率与依从性。" },
+  elderHtn2023: { type: "指南", title: "《中国老年高血压管理指南（2023）》", source: "中国老年医学学会等", url: "https://www.nhsa.gov.cn/attach/Ypsn2024/YPSW202400331/YPSW202400331.pdf", finding: "现有证据倾向优先推荐单片复方制剂作为老年高血压起始与长期维持治疗。" },
+  // —— 成分级心血管硬终点 ——
+  cards: { type: "对照", title: "CARDS（阿托伐他汀 CV 结局，成分级硬终点）", source: "Colhoun HM 等，Lancet 2004; 364: 685-696", url: "https://pubmed.ncbi.nlm.nih.gov/15325833/", finding: "阿托伐他汀 10mg 显著降低 2 型糖尿病患者主要心血管事件；为多达一阿托伐他汀成分的硬终点证据（成分级外推）。" },
+  ascot: { type: "对照", title: "ASCOT-LLA（高血压人群阿托伐他汀）", source: "Sever PS 等，Lancet 2003; 361: 1149-1158", url: "https://pubmed.ncbi.nlm.nih.gov/12686036/", finding: "高血压合并高危患者中阿托伐他汀使 ASCVD 终点事件降低 35%；直接支撑“高血压+降脂”联合管理理念（成分级证据）。" },
+  // —— 医保 / 集采 / 上市（官方与公开披露） ——
+  daVbp8: { type: "集采", title: "第八批国家组织药品集中带量采购（氨氯地平阿托伐他汀钙片）", source: "国家医保局/联采办 · 2023-03-29 开标", url: "https://bydrug.pharmcube.com/news/detail/1142631f62f4815a82774d37106af4ea", finding: "该品种纳入第八批国家集采，平均降价约 48%；4 家仿制药中选，原研多达一（瀚晖制药）虽过一致性评价但未中选，院内面临仿制药替代压力。" },
+  daTransfer: { type: "批准", title: "多达一生产技术转让至瀚晖制药（上市许可持有人变更）", source: "海正药业公告 · NMPA 批准 2021-07", url: "https://finance.sina.com.cn/stock/hkstock/ggscyd/2021-07-15/doc-ikqcfnca7045087.shtml", finding: "辉瑞 PFPrismCV 将 5mg/10mg、5mg/20mg 进口药品生产技术转让至瀚晖制药，保留“多达一”商品名，实现原研本土化生产。" },
+  daMarket: { type: "市场", title: "氨氯地平阿托伐他汀市场与集采格局", source: "公开财经披露（雪球/海正年报）", url: "http://static.cninfo.com.cn/finalpage/2024-04-30/1219914892.PDF", finding: "全球首个降压+降脂含他汀单片复方，2004 年 FDA 批准、2008 年入华；2023 年纳入第八批集采，海正年报披露多达一直接受集采影响。" },
+  daLabel: { type: "说明书", title: "多达一（氨氯地平阿托伐他汀钙片）说明书", source: "瀚晖制药/海正药业 · 原件见内部/药监局查询", finding: "适用于需氨氯地平与阿托伐他汀联合治疗的患者：高血压或心绞痛合并高胆固醇血症/混合型血脂异常；规格含 5mg/10mg、5mg/20mg，每日一次。" },
+  // —— 补充：单片复方达标类研究 ——
+  avalon: { type: "III期", title: "AVALON：氨氯地平+阿托伐他汀合用的疗效与安全性", source: "Messerli FH 等，J Clin Hypertens 2006; 8(8): 571-581（PMID 16896273）", url: "https://pubmed.ncbi.nlm.nih.gov/16896273/", finding: "随机双盲安慰剂对照：第8周联合组 45% 双达标 vs 氨氯地平单药 8.3%、阿托伐他汀单药 28.6%、安慰剂 3.5%(均 P<0.001)；28 周开放期双达标 67.1%；Framingham 10 年 CHD 风险由 15.1% 降至 6.9%。" },
+  jewel: { type: "开放III期", title: "JEWEL I/II：单片复方在英/加/欧的达标研究（2245 例）", source: "Hobbs FDR 等，Eur J Cardiovasc Prev Rehabil 2009; 16(4): 472-480", url: "https://pubmed.ncbi.nlm.nih.gov/19407658/", finding: "双达标 62.9%(JEWEL 1)/50.6%(JEWEL 2)；血压降 20.4/10.7 与 21.8/12.6 mmHg；LDL-C 降 0.90~1.09 mmol/L；外周水肿 11.0%。" },
+  capable: { type: "III期", title: "CAPABLE：单片复方在非裔美国人的达标研究", source: "Flack JM 等，Mayo Clin Proc 2008; 83(1): 35-45（PMID 18174006）", url: "https://pubmed.ncbi.nlm.nih.gov/18174006/", finding: "494 例、20 周弹性滴定：约 48.3% 同时达到血压与 LDL-C 目标，耐受良好。" },
+  crucial: { type: "实用性RCT", title: "CRUCIAL：以单片复方为基础的多重危险因素干预 vs 常规治疗", source: "Zamorano J 等，Curr Med Res Opin 2011; 27(4): 821-833", url: "https://pubmed.ncbi.nlm.nih.gov/21306285/", finding: "20 国整群随机、12 个月：52 周 LDL-C 达标 83% vs 53%(P<0.001)；双达标 50% vs 27%(P<0.001)；Framingham 10 年 CHD 风险显著下降。" },
+  // —— 真实世界（本品最强硬结局 RWD） ——
+  jahaRwd: { type: "真实世界", title: "固定复方 vs 自由联合的心血管结局（台湾 NHIRD 9095 例）", source: "Lin CP 等，J Am Heart Assoc 2024; 13(9): e033780", url: "https://www.ahajournals.org/doi/10.1161/JAHA.123.033780", finding: "5/20 固定复方较自由联合显著降低主要复合心血管结局 HR 0.76(95%CI 0.64-0.91)；较 5/10 固定复方 HR 0.76(0.63-0.90)。注：Viatris 资助，观察性研究。" },
+  cohortFdc: { type: "真实世界", title: "氨氯地平/阿托伐他汀固定复方多机构队列", source: "Lin CP 等（PMC9692224），平均随访 1.7 年，1788 例", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9692224/", finding: "5/20 固定复方较 5/10 显著降低 LDL-C 与复合心血管结局，血压降幅相似。" },
+  // —— 药物经济学 ——
+  ceaKorea: { type: "药物经济学", title: "单片固定复方一级预防心血管病的成本-效果（韩国 Markov 模型）", source: "Liew D, Park HJ, Ko SK. Clin Ther 2009; 31(10): 2189-2203", url: "https://pubmed.ncbi.nlm.nih.gov/19922890/", finding: "≥45 岁一级预防：ICER 约 777 万韩元/QALY，提示具成本效果。注：Pfizer Korea 资助；中国本土经济学证据缺失。" },
+  // —— 患者报告结局（弱） ——
+  proReview: { type: "综述", title: "氨氯地平/阿托伐他汀固定复方的患者视角综述", source: "Devabhaktuni M, Bangalore S. Vasc Health Risk Manag（PMC2686256）", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2686256/", finding: "叙述性综述：降低服药负担(pill burden)可改善依从与患者体验；缺乏以本品为对象的标准量表 PRO/QoL 前瞻研究（证据缺口）。" },
+  // —— 医保 / 集采（关键事实修正） ——
+  vbp8Detail: { type: "集采", title: "第八批国家集采：氨氯地平阿托伐他汀钙片中选详情", source: "国家医保局/联采办 · 2023-03-29 开标，2023-07 落地", url: "https://www.gov.cn/lianbo/2023-03/30/content_5749272.htm", finding: "该品种平均降价约 48%；4 家中选（海西新药 2.5543 元/片第一顺位、正大天晴 2.6193、华润赛科 2.67、嘉林药业 2.75）。原研多达一（瀚晖制药）虽过一致性评价但未中选。" },
+  daLostBid: { type: "政策影响", title: "多达一集采落标对企业业绩的影响", source: "海正药业年报/界面新闻披露", url: "https://m.jiemian.com/article/12285699.html", finding: "2023 年归母净利润 -9317.13 万元，主因多达一等品种集采未中标致份额与价格双降，成品药销售收入降 16.78%。院内准入面临仿制药替代压力。" },
+  nrdlDa: { type: "医保", title: "氨氯地平阿托伐他汀（国家医保乙类）", source: "国家医保目录 · 口服常释剂型 · 乙类", url: "https://www.nhsa.gov.cn/col/col104/index.html", finding: "属国家医保乙类，需个人先自付一定比例；原研落标后患者使用原研超支付标准部分需自付，构成院内向仿制药替代的经济压力。" },
+};
+
+
 /* ===================== 产品层（可插拔，新增药品只需在此追加） ===================== */
 const PRODUCTS = {
   赛斯美: {
@@ -377,7 +457,7 @@ function buildPrompt(brief, evidence, scenario, importance) {
     "\n\n【待评估格子】\n证据类型：" + evidence + "\n应用场景：" + scenario + "\n该格子在框架中的重要性权重：" + importance + "/3\n\n" +
     "要求：对该证据类型在该场景下的\"实际证据强度\"打1-3分（3最强），拆成3-5个子维度，明确区分\"已有且强\"与\"缺口\"，论据要点贴合该场景关注点。\n\n" +
     "只输出JSON，不要任何多余文字，不要markdown围栏：\n" +
-    '{"strength":<1-3整数>,"sub":[{"n":"<子维度>","s":<1-3>,"note":"<不超过12字>"}],"strengths":["<扬长点>"],"gaps":["<缺口>"],"points":["<给该场景的论据要点>"],"rec":"<一句话补证据建议>"}';
+    '{"strength":<1-3整数>,"sub":[{"n":"<子维度>","s":<1-3>,"note":"<不超过12字>"}],"strengths":["<扬长点>"],"gaps":["<缺口>"],"points":["<给该场景的论据要点>"],"rec":"<一句话补证据建议>","sources":[{"title":"<文献/指南/政策名称>","source":"<出处，如期刊年份或机构>","type":"<指南|RCT|真实世界|说明书|政策|其他>","finding":"<一句话关键结论>"}]}';
 }
 
 /* 各模型厂商配置：内置默认接口地址，同事只填 Key。
@@ -519,6 +599,58 @@ function block(iconName, iconColor, title, items, tint, ink) {
   }).join("");
   return '<div style="margin-top:14px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' + ic(iconName, 14, iconColor) + '<span style="font-size:13px;font-weight:500;color:' + C.ink + '">' + title + '</span></div>' + rows + '</div>';
 }
+function defaultRefKeys(brand, eIdx) {
+  if (brand === "赛斯美") {
+    // eIdx: 0 RCT / 1 真实世界 / 2 经济学 / 3 PRO / 4 依从性 / 5 适宜人群 / 6 预算影响
+    var map = [
+      ["sms3_01", "sms3_02", "sms2", "smsSafety", "pk1"],        // RCT 有效性与安全性
+      ["rwe_elderly", "rwe_liu", "rwe_plaque"],                    // 真实世界结局
+      ["cea", "select", "improveIt"],                             // 医院经济学
+      ["smsLabel"],                                                // PRO（缺口，仅说明书）
+      ["smsLabel", "pk1"],                                         // 依从性 / 便利性
+      ["guide2023", "guideUpdate", "smsLabel", "guideBase2024"],   // 适宜人群 / 指南
+      ["nrdl", "nmpa", "select"]                                   // 预算影响 / 医保准入
+    ];
+    var base = (map[eIdx] || ["guide2023"]).slice();
+    // 临床决策相关行补充竞品/类效应参照（RCT 与适宜人群行）
+    if (eIdx === 0 || eIdx === 5) base.push("improveIt");
+    return base.filter(function (x, i, a) { return a.indexOf(x) === i; });
+  }
+  // 多达一（氨氯地平阿托伐他汀钙片）——全部使用本品/成分级专属证据
+  // eIdx: 0 RCT / 1 真实世界 / 2 经济学 / 3 PRO / 4 依从性 / 5 适宜人群 / 6 预算影响
+  var d2 = [
+    ["gemini", "avalon", "respond", "jewel", "capable", "crucial"],   // RCT 有效性与安全性
+    ["jahaRwd", "cohortFdc", "crucial"],                              // 真实世界临床结局
+    ["ceaKorea", "vbp8Detail", "daLostBid"],                          // 医院经济学 / 资源使用
+    ["proReview", "daLabel"],                                          // 患者报告结局（缺口）
+    ["adhPatel", "adhSimons", "adhMeta", "gemini"],                    // 依从性 / 便利性 / 持续性
+    ["htnGuide2024", "elderHtn2023", "eshGuide2023", "daLabel"],       // 适宜人群 / 合理用药
+    ["vbp8Detail", "nrdlDa", "daLostBid"]                              // 预算影响 / 费用影响
+  ];
+  var base2 = (d2[eIdx] || ["daLabel"]).slice();
+  // RCT 行与临床决策相关行补成分级心血管硬终点（明确为外推）
+  if (eIdx === 0) base2 = base2.concat(["cards", "ascot"]);
+  if (eIdx === 1) base2.push("cards");
+  return base2.filter(function (x, i, a) { return a.indexOf(x) === i; });
+}
+function refBlock(refs) {
+  if (!refs || !refs.length) return "";
+  var rows = refs.map(function (r) {
+    var tag = r.type || "文献";
+    var tc = tag === "指南" ? C.green : tag === "说明书" ? C.amber : tag === "RCT" || tag === "III期" ? C.accent || C.amber : tag === "真实世界" ? C.amber : C.sub;
+    var title = r.url ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener" style="color:' + (C.navy || C.accent || "1F6BB8") + ';text-decoration:underline;text-underline-offset:2px">' + esc(r.title) + ' \u2197</a>' : esc(r.title);
+    return '<div style="padding:7px 10px;background:#fff;border:0.5px solid ' + C.line + ';border-radius:8px;margin-bottom:6px">' +
+      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;flex-wrap:wrap">' +
+      '<span style="font-size:10.5px;font-weight:600;color:' + tc + ';background:' + C.panel + ';border:0.5px solid ' + C.line + ';padding:0 7px;border-radius:999px">' + esc(tag) + '</span>' +
+      '<span style="font-size:12.5px;font-weight:600;color:' + C.ink + '">' + title + '</span></div>' +
+      (r.source ? '<div style="font-size:11px;color:' + C.sub + '">' + esc(r.source) + '</div>' : '') +
+      (r.finding ? '<div style="font-size:11.5px;color:' + C.body + ';line-height:1.5;margin-top:2px">' + esc(r.finding) + '</div>' : '') +
+      '</div>';
+  }).join("");
+  return '<div style="margin-top:14px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' +
+    ic("Info", 14, C.sub) + '<span style="font-size:13px;font-weight:500;color:' + C.ink + '">证据出处（' + refs.length + '）</span>' +
+    '<span style="font-size:10.5px;color:' + C.sub + '">· 供核对原文</span></div>' + rows + '</div>';
+}
 function scoreCard(data, badgeHtml, badgeTint, badgeInk, P) {
   var subRows = data.sub.map(function (d) {
     var st = d.s >= 3 ? { c: C.green, t: C.greenSoft, l: "强" } : d.s === 2 ? { c: C.amber, t: C.amberSoft, l: "中" } : { c: C.red, t: C.redSoft, l: "缺口" };
@@ -528,6 +660,12 @@ function scoreCard(data, badgeHtml, badgeTint, badgeInk, P) {
       stars(d.s, st.c, 13) +
       '<span style="font-size:11px;padding:1px 8px;border-radius:6px;background:' + st.t + ';color:' + st.c + ';min-width:34px;text-align:center">' + st.l + '</span></div>';
   }).join("");
+  // 解析出处：verified 格用 data.refKeys 映射到共享库；AI 结果用 data.sources（字符串数组）
+  var refs = null;
+  var keys = data.refKeys;
+  if (!keys && data.__verified) keys = defaultRefKeys(S.brand, S.sel[0]);
+  if (keys && keys.length) refs = keys.map(function (k) { return REFS[k]; }).filter(Boolean);
+  else if (data.sources && data.sources.length) refs = data.sources.map(function (s) { return (typeof s === "string") ? { title: s, type: "AI引用" } : s; });
   return '<div>' +
     '<div style="display:inline-flex;align-items:center;gap:5px;background:' + badgeTint + ';color:' + badgeInk + ';font-size:12px;padding:3px 10px;border-radius:999px;margin-bottom:12px">' + badgeHtml + '</div>' +
     '<div>' + subRows + '</div>' +
@@ -535,6 +673,7 @@ function scoreCard(data, badgeHtml, badgeTint, badgeInk, P) {
     block("AlertTriangle", C.red, "补短（证据缺口）", data.gaps, C.redSoft, C.red) +
     block("Check", C.green, "论据要点", data.points, C.greenSoft, C.green) +
     (data.rec ? '<div style="margin-top:12px;padding:10px 12px;background:' + C.panel + ';border-radius:10px;font-size:13px;color:' + C.ink + ';line-height:1.6"><span style="font-weight:500">建议：</span>' + esc(data.rec) + '</div>' : '') +
+    refBlock(refs) +
     '</div>';
 }
 
@@ -712,6 +851,7 @@ function render() {
   /* 评分卡 / AI 分析 */
   html += '<div style="margin-top:18px">';
   if (verified) {
+    verified.__verified = true;
     html += scoreCard(verified, ic("ShieldCheck", 13, C.green) + " 已验证 · 基于公开检索的真实证据", C.greenSoft, C.green, P);
   } else if (S.ai[aiKey] && !S.ai[aiKey].error) {
     html += scoreCard(S.ai[aiKey], ic("Sparkles", 13, P.accentInk) + " AI 现场生成 · 待人工复核", P.accentSoft, P.accentInk, P);
